@@ -55,7 +55,7 @@ else()
   set(ARCHDIR "unknown-arch")
 endif()
 
-option(AUTO_DEPLOY "Install the plugin on build" OFF)
+option(AUTO_DEPLOY "Install the plugin on build" ON)
 
 if(AUTO_DEPLOY)
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES SUFFIX ".ofx" PREFIX "")
