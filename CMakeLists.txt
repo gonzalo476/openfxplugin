@@ -7,36 +7,39 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Directory where the OpenFX header files are located dfvdg
 # Adjust this path according to the location of your OpenFX files
-set(OFX_INCLUDE_DIR "C:/OpenFX14/include")
 
-# Add the include directory
-include_directories(${OFX_INCLUDE_DIR})
+file(GLOB OFX_LIB_HEADERS
+    OpenFX14/Support/include/*.h
+    OpenFX14/include/*.h
+)
 
-# Add your plugin's source files ff
-# You can list the files manually or use a glob expression
+set(OFX_LIB_SOURCES
+    OpenFX14/Support/Library/ofxsCore.cpp
+    OpenFX14/Support/Library/ofxsImageEffect.cpp
+    OpenFX14/Support/Library/ofxsInteract.cpp
+    OpenFX14/Support/Library/ofxsLog.cpp
+    OpenFX14/Support/Library/ofxsMultiThread.cpp
+    OpenFX14/Support/Library/ofxsParams.cpp
+    OpenFX14/Support/Library/ofxsProperty.cpp
+    OpenFX14/Support/Library/ofxsPropertyValidation.cpp
+)
+
+add_library(OFX_LIB STATIC ${OFX_LIB_SOURCES} ${OFX_LIB_HEADERS})
+target_include_directories(OFX_LIB PUBLIC
+    OpenFX14/Support/include/
+    OpenFX14/include/
+)
+
 file(GLOB PLUGIN_SOURCES
     src/MyPlugin.cpp
 )
 
-# Create the shared library (the plugin)
-add_library(MyOFXPlugin MODULE ${PLUGIN_SOURCES})
-
-# On UNIX systems, it's necessary to add the .ofx suffix
-set_target_properties(MyOFXPlugin PROPERTIES
-    PREFIX ""
-    SUFFIX ".ofx"
+# Add executable
+add_library(${CMAKE_PROJECT_NAME} SHARED ${PLUGIN_SOURCES} ${OFX_LIB_HEADERS})
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
+    OpenFX14/Support/include/
+    OpenFX14/include/
 )
-
-# Specific configurations for macOS
-if(APPLE)
-    set_target_properties(MyOFXPlugin PROPERTIES
-        BUNDLE TRUE
-        BUNDLE_EXTENSION "ofx"
-    )
-endif()
-
-# Optional: Copy the plugin to the OpenFX plugin folder after building
-# Adjust OFX_PLUGIN_INSTALL_DIR according to your system
 
 if(APPLE)
   set(OFX_PLUGIN_INSTALL_DIR "/Library/OFX/Plugins")
@@ -52,9 +55,28 @@ else()
   set(ARCHDIR "unknown-arch")
 endif()
 
-install(TARGETS MyOFXPlugin
-    LIBRARY DESTINATION ${OFX_PLUGIN_INSTALL_DIR}
-    RUNTIME DESTINATION ${OFX_PLUGIN_INSTALL_DIR}
-    BUNDLE  DESTINATION ${OFX_PLUGIN_INSTALL_DIR}
-)
+option(AUTO_DEPLOY "Install the plugin on build" OFF)
 
+if(AUTO_DEPLOY)
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES SUFFIX ".ofx" PREFIX "")
+if (DEFINED ENV{OFX_PLUGIN_PATH})
+# use the standard envvar OFX_PLUGIN_PATH (custom plugin location) this could avoid write permissions problems
+# set(OFX_PLUGIN_PATH $ENV{OFX_PLUGIN_PATH})
+# avoid backslashes under windows...
+file(TO_CMAKE_PATH $ENV{OFX_PLUGIN_PATH} OFX_PLUGIN_PATH)
+message( "The ofx plugin will be installed in OFX_PLUGIN_PATH : ${OFX_PLUGIN_PATH}/${CMAKE_PROJECT_NAME}.ofx.bundle/Contents/${ARCHDIR}")
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND}  -E copy_if_different $<TARGET_FILE:${CMAKE_PROJECT_NAME}>
+                                    ${OFX_PLUGIN_PATH}/${CMAKE_PROJECT_NAME}.ofx.bundle/Contents/${ARCHDIR}/$<TARGET_FILE_NAME:${CMAKE_PROJECT_NAME}>
+)
+# install(TARGETS ${TARGET} DESTINATION "${OFX_PLUGIN_PATH}/${TARGET}.ofx.bundle/Contents/${ARCHDIR}")
+else()
+# use the PLUGINDIR (standard plugin location)
+message( "The OFX_PLUGIN_PATH env var is not defined : the ofx plugin will be installed in standard location : ${PLUGINDIR}/${CMAKE_PROJECT_NAME}.ofx.bundle/Contents/${ARCHDIR}")
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND}  -E copy_if_different $<TARGET_FILE:${CMAKE_PROJECT_NAME}>
+                                    ${PLUGINDIR}/${CMAKE_PROJECT_NAME}.ofx.bundle/Contents/${ARCHDIR}/$<TARGET_FILE_NAME:${CMAKE_PROJECT_NAME}>
+)
+# install(TARGETS ${TARGET} DESTINATION "${PLUGINDIR}/${TARGET}.ofx.bundle/Contents/${ARCHDIR}")
+endif()
+endif()
