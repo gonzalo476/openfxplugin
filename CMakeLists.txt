@@ -41,6 +41,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
     OpenFX14/include/
 )
 
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "${PROJECT_BINARY_DIR}")
+
 if(APPLE)
   set(OFX_PLUGIN_INSTALL_DIR "/Library/OFX/Plugins")
   set(ARCHDIR "MacOS")
@@ -71,12 +73,12 @@ add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
 )
 # install(TARGETS ${TARGET} DESTINATION "${OFX_PLUGIN_PATH}/${TARGET}.ofx.bundle/Contents/${ARCHDIR}")
 else()
-# use the PLUGINDIR (standard plugin location)
-message( "The OFX_PLUGIN_PATH env var is not defined : the ofx plugin will be installed in standard location : ${PLUGINDIR}/${CMAKE_PROJECT_NAME}.ofx.bundle/Contents/${ARCHDIR}")
+# use the OFX_PLUGIN_INSTALL_DIR (standard plugin location)
+message( "The OFX_PLUGIN_PATH env var is not defined : the ofx plugin will be installed in standard location : ${OFX_PLUGIN_INSTALL_DIR}/${CMAKE_PROJECT_NAME}.ofx.bundle/Contents/${ARCHDIR}")
 add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND}  -E copy_if_different $<TARGET_FILE:${CMAKE_PROJECT_NAME}>
-                                    ${PLUGINDIR}/${CMAKE_PROJECT_NAME}.ofx.bundle/Contents/${ARCHDIR}/$<TARGET_FILE_NAME:${CMAKE_PROJECT_NAME}>
+                                    ${OFX_PLUGIN_INSTALL_DIR}/${CMAKE_PROJECT_NAME}.ofx.bundle/Contents/${ARCHDIR}/$<TARGET_FILE_NAME:${CMAKE_PROJECT_NAME}>
 )
-# install(TARGETS ${TARGET} DESTINATION "${PLUGINDIR}/${TARGET}.ofx.bundle/Contents/${ARCHDIR}")
+# install(TARGETS ${TARGET} DESTINATION "${OFX_PLUGIN_INSTALL_DIR}/${TARGET}.ofx.bundle/Contents/${ARCHDIR}")
 endif()
 endif()
