@@ -37,7 +37,7 @@ endif()
 
 # Optional: Copy the plugin to the OpenFX plugin folder after building
 # Adjust OFX_PLUGIN_INSTALL_DIR according to your system
-set(OFX_PLUGIN_INSTALL_DIR "C:/Program Files/Common Files/OFX/Plugins")
+set(OFX_PLUGIN_INSTALL_DIR "C:/Program Files/Common Files/OFX/Plugins/MyPlugin")
 
 install(TARGETS MyOFXPlugin
     LIBRARY DESTINATION ${OFX_PLUGIN_INSTALL_DIR}
