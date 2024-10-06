@@ -1,53 +1,121 @@
-# Archivos de compilación
+# C++ build files
 *.o
 *.obj
+*.so
+*.a
+*.lib
+*.dll
 *.exe
 *.out
-*.dll
-*.so
+*.app
 *.dylib
+*.bundle
 
-# Archivos de depuración
+# Debug files
 *.gch
 *.pch
 *.log
 *.stackdump
+*.debug
 
-# Archivos generados por IDEs
-.vscode/
-.idea/
-*.code-workspace
-
-# Archivos de compilación de CMake
+# CMake build files
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+build/
+Testing/
+CTestTestfile.cmake
+CTestCustom.cmake
+*.cmake
+*.ninja
+Ninja.build
+compile_commands.json
 
-# Archivos de compilación automake
-aclocal.m4
-autom4te.cache/
-compile
-config.h
-config.h.in
-config.log
-config.status
-configure
-configure.scan
-depcomp
-install-sh
-libtool
-ltmain.sh
-Makefile.in
-missing
-stamp-h1
+# CMake install files
+_install/
 
-# Archivos de sistema
-.DS_Store
-Thumbs.db
+# IDE-specific project and config files
+.idea/
+.vscode/
+*.code-workspace
+*.workspace
 
-# Archivos de paquetes
+# CLion (JetBrains) configuration
+*.iml
+cmake-build-debug/
+cmake-build-release/
+
+# Visual Studio Code config files
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+
+# Visual Studio project files
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.pdb
+*.idb
+*.ipch
+*.tlog
+*.lastbuildstate
+*.user
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.VC.opendb
+
+# Linux/macOS compiler generated files
+*.d
+*.lo
+*.la
+
+# OpenFX libraries and binary directories
+OFX/
+Bin/
+Lib/
+Plugins/
+*.ofx
+*.bundle
+*.dylib
+
+# OpenFX build files
+*.plugin
+*.ofx.bundle
+*.ofx.so
+*.ofx.dylib
+
+# Packaging generated files
 *.tar.gz
 *.zip
 *.rar
 *.7z
+
+# Test generated files
+*.testlog
+test-results.xml
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Temporary and backup files
+*.swp
+*.bak
+*.tmp
+*.old
+*.orig
+*.rej
+*~
+
+# OS temporary files
+*~
+\#*\#
+.\#*
+*.swp
+*.swo
+*.tmp
+*.DS_Store
