@@ -1,0 +1,53 @@
+# Archivos de compilación
+*.o
+*.obj
+*.exe
+*.out
+*.dll
+*.so
+*.dylib
+
+# Archivos de depuración
+*.gch
+*.pch
+*.log
+*.stackdump
+
+# Archivos generados por IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Archivos de compilación de CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Archivos de compilación automake
+aclocal.m4
+autom4te.cache/
+compile
+config.h
+config.h.in
+config.log
+config.status
+configure
+configure.scan
+depcomp
+install-sh
+libtool
+ltmain.sh
+Makefile.in
+missing
+stamp-h1
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de paquetes
+*.tar.gz
+*.zip
+*.rar
+*.7z
